@@ -1,0 +1,168 @@
+---
+title: "Analyse mortalité x secteur public"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## GitHub Documents
+
+This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+
+
+Afin de pouvoir étudier l'influence des indicateurs sur le secteur public, on détermine d'abord les indicateurs que l'on va étudier. Dans un premier temps on regarde, le nombre de valeurs manquantes pour chacune des variables. En effet si le nombre de valeurs manquantes est trop important, il n'est pas pertinent de conserver la variable.
+
+On crée une fonction qui calcule le nombre de valeurs manquantes pour toutes les variables :
+```{r}
+load(file="~/PST.RData")
+## création du dataframe à remplir
+PS_NA<- data.frame(matrix(ncol = 4, nrow = 0))
+colnames(PS_NA)<-c("Code","Nom","Nombre de NA","% de NA")
+for (i in 1:nrow(PublicSector)) ## Poverty = dataset des indicateurs de pauvreté et leur signification
+  {
+      ### Calcul de NA
+      code=PublicSector[i,3]
+      nbNA=sum(is.na(WorldBank[[toString(code)]]))
+      PS_NA[i,]<-list(toString(code),toString(PublicSector[i,4]),nbNA,nbNA/46*100)
+}
+##Affichage du résultat
+library(knitr)
+kable(PS_NA,caption="Valeurs manquantes pour les variables Pauvreté")
+```
+
+On conserve les variables avec moins de 30% de valeurs manquantes, ce qui nous donne :
+
+```{r}
+library(knitr)
+PS_NA<-PS_NA[PS_NA$`% de NA`<=30,]
+kable(PS_NA,caption="Variables restantes (NA<30%)")
+```
+
+Il ne reste alors que les 19 variables indiquées ci-dessus.
+
+On va donc réaliser l'analyse pour ces 19 variables. Pour cela il faut d'abord lier les deux datasets en un même dataset.
+
+```{r, message=F,warning=F}
+library(dplyr)
+## Création d'un dataset avec uniquement les données pauvreté et l'année
+ps_data<-WorldBank[,4,drop=FALSE]
+  for (i in 1:nrow(PS_NA)) ## indicateur conservé
+  {
+      code=PS_NA[i,1]
+      ps_data<-cbind(ps_data,WorldBank[toString(code)])
+}
+mortalityPS<-inner_join(mortalityBr,ps_data,by=c("Periode"="year"))
+```
+
+GC.REV.GOTR.CN :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.GOTR.CN,use = "complete.obs")
+```
+
+GC.REV.GOTR.ZS :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.GOTR.ZS,use = "complete.obs")
+```
+
+GC.REV.SOCL.CN :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.SOCL.CN,use = "complete.obs")
+```
+
+GC.REV.SOCL.ZS : 
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.SOCL.ZS,use = "complete.obs")
+```
+
+GC.REV.XGRT.CN :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.XGRT.CN,use = "complete.obs")
+```
+
+GC.REV.XGRT.GD.ZS :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.XGRT.GD.ZS,use = "complete.obs")
+```
+
+GC.TAX.TOTL.CN :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.TAX.TOTL.CN,use = "complete.obs")
+```
+
+GC.TAX.TOTL.GD.ZS :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.TAX.TOTL.GD.ZS,use = "complete.obs")
+```
+
+GC.XPN.COMP.CN :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.COMP.CN,use = "complete.obs")
+```
+
+GC.XPN.COMP.ZS :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.COMP.ZS,use = "complete.obs")
+```
+
+
+GC.XPN.GSRV.CN :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.GSRV.CN,use = "complete.obs")
+```
+
+GC.XPN.GSRV.ZS :
+
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.GSRV.ZS,use = "complete.obs")
+```
+
+GC.XPN.INTP.CN :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.CN,use = "complete.obs")
+```
+
+GC.XPN.INTP.RV.ZS :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.CN,use = "complete.obs")
+```
+
+GC.XPN.INTP.ZS :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.ZS,use = "complete.obs")
+```
+
+GC.XPN.TOTL.CN :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.TOTL.CN,use = "complete.obs")
+```
+
+GC.XPN.TOTL.GD.ZS :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.TOTL.GD.ZS,use = "complete.obs")
+```
+
+
+MS.MIL.MPRT.KD :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$MS.MIL.MPRT.KD,use = "complete.obs")
+```
+
+
+MS.MIL.XPRT.KD :
+```{r}
+cor(mortalityPS$TauxMortalite,mortalityPS$MS.MIL.XPRT.KD,use = "complete.obs")
+```
+
+Les coefficients de corrélation sont très faibles, il n'y a donc pas a priori de relation entre ces variables et la mortalité.
