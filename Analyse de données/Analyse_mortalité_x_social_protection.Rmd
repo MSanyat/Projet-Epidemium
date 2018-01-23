@@ -62,8 +62,10 @@ Création d'une valeur moyenne de la mortalité sur l'année :
 ```{r}
 mortalitySP2<-unique(mortalitySP[,c(5,9:11)])
 mortalitySP2$`Mean Mortality`<-NA
+mortalitySP2$`Total Mortality`<-NA
 for (i in 1:nrow(mortalitySP)) {
   mortalitySP2[i,5]<-mean(mortalitySP$Mortalité[mortalitySP$Periode==mortalitySP2$Periode[i]])
+  mortalitySP2[i,6]<-sum(mortalitySP$Mortalité[mortalitySP$Periode==mortalitySP2$Periode[i]])
 }
 mortalitySP2<-mortalitySP2[!is.na(mortalitySP2$Periode),]
 ```
@@ -71,12 +73,12 @@ mortalitySP2<-mortalitySP2[!is.na(mortalitySP2$Periode),]
 On affiche à nouveau le graphique de relation :
 
 ```{r, warning=FALSE}
-pairs(mortalitySP2[,c(2:5)],na.action = na.omit)
+pairs(mortalitySP2[,c(2:6)],na.action = na.omit)
 ```
 
 Le corélogramme :
 
 ```{r}
-corrplot(cor(mortalitySP2[,c(2:5)],use="complete.obs"), type="upper", order="hclust")
+corrplot(cor(mortalitySP2[,c(2:6)],use="complete.obs"), type="upper", order="hclust")
 ```
 

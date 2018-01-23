@@ -1,11 +1,6 @@
 Analyse mortalité x secteur public
 ================
 
-GitHub Documents
-----------------
-
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
-
 Afin de pouvoir étudier l'influence des indicateurs sur le secteur public, on détermine d'abord les indicateurs que l'on va étudier. Dans un premier temps on regarde, le nombre de valeurs manquantes pour chacune des variables. En effet si le nombre de valeurs manquantes est trop important, il n'est pas pertinent de conserver la variable.
 
 On crée une fonction qui calcule le nombre de valeurs manquantes pour toutes les variables :
@@ -156,156 +151,75 @@ ps_data<-WorldBank[,4,drop=FALSE]
 mortalityPS<-inner_join(mortalityBr,ps_data,by=c("Periode"="year"))
 ```
 
-GC.REV.GOTR.CN :
+On affiche le corrélogramme :
 
 ``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.GOTR.CN,use = "complete.obs")
+library(corrplot)
 ```
 
-    ## [1] -0.1231238
-
-GC.REV.GOTR.ZS :
+    ## corrplot 0.84 loaded
 
 ``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.GOTR.ZS,use = "complete.obs")
+corrplot(cor(mortalityPS[,c(6,8:27)],use="complete.obs"), type="upper", order="hclust")
 ```
 
-    ## [1] 0.1519632
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
-GC.REV.SOCL.CN :
+Affichage des graphiques :
 
 ``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.SOCL.CN,use = "complete.obs")
+pairs(mortalityPS[,c(6,8:15)],na.action = na.omit)
 ```
 
-    ## [1] -0.1350938
-
-GC.REV.SOCL.ZS :
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.SOCL.ZS,use = "complete.obs")
+pairs(mortalityPS[,c(6,16:27)],na.action = na.omit)
 ```
 
-    ## [1] 0.02006514
-
-GC.REV.XGRT.CN :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.XGRT.CN,use = "complete.obs")
-```
-
-    ## [1] -0.1550303
-
-GC.REV.XGRT.GD.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.XGRT.GD.ZS,use = "complete.obs")
-```
-
-    ## [1] 0.2114836
-
-GC.TAX.TOTL.CN :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.TAX.TOTL.CN,use = "complete.obs")
-```
-
-    ## [1] -0.1763968
-
-GC.TAX.TOTL.GD.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.TAX.TOTL.GD.ZS,use = "complete.obs")
-```
-
-    ## [1] 0.2040418
-
-GC.XPN.COMP.CN :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.COMP.CN,use = "complete.obs")
-```
-
-    ## [1] -0.178087
-
-GC.XPN.COMP.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.COMP.ZS,use = "complete.obs")
-```
-
-    ## [1] -0.154289
-
-GC.XPN.GSRV.CN :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.GSRV.CN,use = "complete.obs")
-```
-
-    ## [1] -0.218706
-
-GC.XPN.GSRV.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.GSRV.ZS,use = "complete.obs")
-```
-
-    ## [1] -0.0321723
-
-GC.XPN.INTP.CN :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.CN,use = "complete.obs")
-```
-
-    ## [1] -0.1480564
-
-GC.XPN.INTP.RV.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.CN,use = "complete.obs")
-```
-
-    ## [1] -0.1480564
-
-GC.XPN.INTP.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.ZS,use = "complete.obs")
-```
-
-    ## [1] 0.2014358
-
-GC.XPN.TOTL.CN :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.TOTL.CN,use = "complete.obs")
-```
-
-    ## [1] -0.1535387
-
-GC.XPN.TOTL.GD.ZS :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.TOTL.GD.ZS,use = "complete.obs")
-```
-
-    ## [1] 0.2081211
-
-MS.MIL.MPRT.KD :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$MS.MIL.MPRT.KD,use = "complete.obs")
-```
-
-    ## [1] -0.0449081
-
-MS.MIL.XPRT.KD :
-
-``` r
-cor(mortalityPS$TauxMortalite,mortalityPS$MS.MIL.XPRT.KD,use = "complete.obs")
-```
-
-    ## [1] 0.08860194
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 Les coefficients de corrélation sont très faibles, il n'y a donc pas a priori de relation entre ces variables et la mortalité.
+
+``` r
+mortalityPS2<-unique(mortalityPS[,c(5,9:27)])
+mortalityPS2$`Mean Mortality`<-NA
+mortalityPS2$`Total Mortality`<-NA
+for (i in 1:nrow(mortalityPS)) {
+  mortalityPS2[i,21]<-mean(mortalityPS$Mortalité[mortalityPS$Periode==mortalityPS2$Periode[i]])
+  mortalityPS2[i,22]<-sum(mortalityPS$Mortalité[mortalityPS$Periode==mortalityPS2$Periode[i]])
+}
+mortalityPS2<-mortalityPS2[!is.na(mortalityPS2$Periode),]
+```
+
+Corélogramme :
+
+``` r
+corrplot(cor(mortalityPS2[,c(2:22)],use="complete.obs"), type="upper", order="hclust")
+```
+
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-8-1.png) Affichage plot :
+
+``` r
+pairs(mortalityPS2[,c(2:7,21:22)],na.action = na.omit)
+```
+
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+``` r
+pairs(mortalityPS2[,c(8:12,21:22)],na.action = na.omit)
+```
+
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+``` r
+pairs(mortalityPS2[,c(13:16,21:22)],na.action = na.omit)
+```
+
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+``` r
+pairs(mortalityPS2[,c(17:22)],na.action = na.omit)
+```
+
+![](Analyse_mortalité_x_secteur_public_files/figure-markdown_github/unnamed-chunk-12-1.png)

@@ -156,26 +156,51 @@ sp_data<-WorldBank[,4,drop=FALSE]
 mortalitySP<-inner_join(mortalityBr,sp_data,by=c("Periode"="year"))
 ```
 
-SL.UEM.TOTL.FE.NE.ZS :
+On affiche le corrélogramme :
 
 ``` r
-cor(mortalitySP$TauxMortalite[mortalitySP$Sexe==2],mortalitySP$SL.UEM.TOTL.FE.NE.ZS[mortalitySP$Sexe==2],use = "complete.obs")
+library(corrplot)
 ```
 
-    ## [1] -0.108521
-
-SL.UEM.TOTL.MA.NE.ZS :
+    ## corrplot 0.84 loaded
 
 ``` r
-cor(mortalitySP$TauxMortalite[mortalitySP$Sexe==1],mortalitySP$SL.UEM.TOTL.MA.NE.ZS[mortalitySP$Sexe==1],use = "complete.obs")
+corrplot(cor(mortalitySP[,c(6,8:11)],use="complete.obs"), type="upper", order="hclust")
 ```
 
-    ## [1] -0.1091585
-
-SL.UEM.TOTL.NE.ZS :
+![](Analyse_mortalité_x_social_protection_files/figure-markdown_github/unnamed-chunk-4-1.png) On constate donc qu'il n'y a pas de corrélation entre les variables et la mortalité.
 
 ``` r
-cor(mortalitySP$TauxMortalite,mortalitySP$SL.UEM.TOTL.MA.NE.ZS,use = "complete.obs")
+pairs(mortalitySP[,c(6,8:11)],na.action = na.omit)
 ```
 
-    ## [1] -0.1152989
+![](Analyse_mortalité_x_social_protection_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+Création d'une valeur moyenne de la mortalité sur l'année :
+
+``` r
+mortalitySP2<-unique(mortalitySP[,c(5,9:11)])
+mortalitySP2$`Mean Mortality`<-NA
+mortalitySP2$`Total Mortality`<-NA
+for (i in 1:nrow(mortalitySP)) {
+  mortalitySP2[i,5]<-mean(mortalitySP$Mortalité[mortalitySP$Periode==mortalitySP2$Periode[i]])
+  mortalitySP2[i,6]<-sum(mortalitySP$Mortalité[mortalitySP$Periode==mortalitySP2$Periode[i]])
+}
+mortalitySP2<-mortalitySP2[!is.na(mortalitySP2$Periode),]
+```
+
+On affiche à nouveau le graphique de relation :
+
+``` r
+pairs(mortalitySP2[,c(2:6)],na.action = na.omit)
+```
+
+![](Analyse_mortalité_x_social_protection_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+Le corélogramme :
+
+``` r
+corrplot(cor(mortalitySP2[,c(2:6)],use="complete.obs"), type="upper", order="hclust")
+```
+
+![](Analyse_mortalité_x_social_protection_files/figure-markdown_github/unnamed-chunk-8-1.png)
