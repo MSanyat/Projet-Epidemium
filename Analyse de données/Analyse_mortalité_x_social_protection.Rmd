@@ -46,19 +46,37 @@ sp_data<-WorldBank[,4,drop=FALSE]
 mortalitySP<-inner_join(mortalityBr,sp_data,by=c("Periode"="year"))
 ```
 
-
-SL.UEM.TOTL.FE.NE.ZS :
+On affiche le corrélogramme :
 ```{r}
-cor(mortalitySP$TauxMortalite[mortalitySP$Sexe==2],mortalitySP$SL.UEM.TOTL.FE.NE.ZS[mortalitySP$Sexe==2],use = "complete.obs")
+library(corrplot)
+corrplot(cor(mortalitySP[,c(6,8:11)],use="complete.obs"), type="upper", order="hclust")
+```
+On constate donc qu'il n'y a pas de corrélation entre les variables et la mortalité.
+
+```{r, warning=FALSE}
+pairs(mortalitySP[,c(6,8:11)],na.action = na.omit)
 ```
 
-SL.UEM.TOTL.MA.NE.ZS :
+Création d'une valeur moyenne de la mortalité sur l'année :
+
 ```{r}
-cor(mortalitySP$TauxMortalite[mortalitySP$Sexe==1],mortalitySP$SL.UEM.TOTL.MA.NE.ZS[mortalitySP$Sexe==1],use = "complete.obs")
+mortalitySP2<-unique(mortalitySP[,c(5,9:11)])
+mortalitySP2$`Mean Mortality`<-NA
+for (i in 1:nrow(mortalitySP)) {
+  mortalitySP2[i,5]<-mean(mortalitySP$Mortalité[mortalitySP$Periode==mortalitySP2$Periode[i]])
+}
+mortalitySP2<-mortalitySP2[!is.na(mortalitySP2$Periode),]
 ```
 
-SL.UEM.TOTL.NE.ZS :
+On affiche à nouveau le graphique de relation :
+
+```{r, warning=FALSE}
+pairs(mortalitySP2[,c(2:5)],na.action = na.omit)
+```
+
+Le corélogramme :
+
 ```{r}
-cor(mortalitySP$TauxMortalite,mortalitySP$SL.UEM.TOTL.MA.NE.ZS,use = "complete.obs")
+corrplot(cor(mortalitySP2[,c(2:5)],use="complete.obs"), type="upper", order="hclust")
 ```
 

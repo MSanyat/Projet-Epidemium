@@ -56,113 +56,27 @@ ps_data<-WorldBank[,4,drop=FALSE]
 mortalityPS<-inner_join(mortalityBr,ps_data,by=c("Periode"="year"))
 ```
 
-GC.REV.GOTR.CN :
+On affiche le corrélogramme :
 
 ```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.GOTR.CN,use = "complete.obs")
+library(corrplot)
+corrplot(cor(mortalityPS[,c(6,8:27)],use="complete.obs"), type="upper", order="hclust")
 ```
 
-GC.REV.GOTR.ZS :
+Affichage des graphiques :
 
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.GOTR.ZS,use = "complete.obs")
-```
-
-GC.REV.SOCL.CN :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.SOCL.CN,use = "complete.obs")
-```
-
-GC.REV.SOCL.ZS : 
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.SOCL.ZS,use = "complete.obs")
-```
-
-GC.REV.XGRT.CN :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.XGRT.CN,use = "complete.obs")
-```
-
-GC.REV.XGRT.GD.ZS :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.REV.XGRT.GD.ZS,use = "complete.obs")
-```
-
-GC.TAX.TOTL.CN :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.TAX.TOTL.CN,use = "complete.obs")
-```
-
-GC.TAX.TOTL.GD.ZS :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.TAX.TOTL.GD.ZS,use = "complete.obs")
-```
-
-GC.XPN.COMP.CN :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.COMP.CN,use = "complete.obs")
-```
-
-GC.XPN.COMP.ZS :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.COMP.ZS,use = "complete.obs")
-```
-
-
-GC.XPN.GSRV.CN :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.GSRV.CN,use = "complete.obs")
-```
-
-GC.XPN.GSRV.ZS :
-
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.GSRV.ZS,use = "complete.obs")
-```
-
-GC.XPN.INTP.CN :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.CN,use = "complete.obs")
-```
-
-GC.XPN.INTP.RV.ZS :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.CN,use = "complete.obs")
-```
-
-GC.XPN.INTP.ZS :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.INTP.ZS,use = "complete.obs")
-```
-
-GC.XPN.TOTL.CN :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.TOTL.CN,use = "complete.obs")
-```
-
-GC.XPN.TOTL.GD.ZS :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$GC.XPN.TOTL.GD.ZS,use = "complete.obs")
-```
-
-
-MS.MIL.MPRT.KD :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$MS.MIL.MPRT.KD,use = "complete.obs")
-```
-
-
-MS.MIL.XPRT.KD :
-```{r}
-cor(mortalityPS$TauxMortalite,mortalityPS$MS.MIL.XPRT.KD,use = "complete.obs")
-```
+```{r,warning=FALSE}
+pairs(mortalityPS[,c(6,8:15 v)],na.action = na.omit)
+```  
 
 Les coefficients de corrélation sont très faibles, il n'y a donc pas a priori de relation entre ces variables et la mortalité.
+
+```{r}
+mortalitySP2<-unique(mortalitySP[,c(5,9:11)])
+mortalitySP2$`Mean Mortality`<-NA
+for (i in 1:nrow(mortalitySP)) {
+  mortalitySP2[i,5]<-mean(mortalitySP$Mortalité[mortalitySP$Periode==mortalitySP2$Periode[i]])
+}
+mortalitySP2<-mortalitySP2[!is.na(mortalitySP2$Periode),]
+```
+
